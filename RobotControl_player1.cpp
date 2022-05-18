@@ -1,7 +1,9 @@
 #include "pch.h"
 #include <debugapi.h>
 #include "RobotControl_player1.h"
+#include <vector>
 
+using namespace std;
 using namespace Player1;
 
 Player1::RobotControl::RobotControl()
@@ -11,7 +13,7 @@ Player1::RobotControl::RobotControl()
 	team_name = L"Legion > cataclysm";
 }
 
-Command Player1::RobotControl::do_command(const Info &info)
+Command Player1::RobotControl::do_command(const Info& info) 
 {
 	OutputDebugString(L"Nu körs do_command()\n");
 	if (info.last_event == Event::COLLISION)
@@ -19,18 +21,72 @@ Command Player1::RobotControl::do_command(const Info &info)
 
 	int d = rand() % 8;
 	Dir dir = static_cast<Dir>(d);
-	bool treasure = 0;
+	bool move = 1;
+	int n = 0;
+	vector<int> walls;
+
+	/*for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if (info.neighbor_cells[i][j] == Cell_content::WALL || info.neighbor_cells[i][j] == Cell_content::TRAP || info.neighbor_cells[i][j] == Cell_content::ROBOT) {
+				switch (i) {
+				case 0:
+
+					switch (j) {
+					case 0:
+						walls.push_back(0);
+					case 1:
+						walls.push_back(1);
+					case 2:
+						walls.push_back(2);
+					default:
+						break;
+					}
+
+				case 1:
+
+					switch (j) {
+					case 0:
+						walls.push_back(3);
+					case 1:
+						continue;
+					case 2:
+						walls.push_back(4);
+					default:
+						break;
+					}
+
+				case 2:
+
+					switch (j) {
+					case 0:
+						walls.push_back(5);
+					case 1:
+						walls.push_back(6);
+					case 2:
+						walls.push_back(7);
+					default:
+						break;
+					}
+
+				default:
+					break;
+				}
+			}
+		}
+	}*/
+
+	/*while (move) {
+		for (int i = 0; i < walls.size(); i++) {
+			if (d == walls[i])
+
+		}
+	}*/
 
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (info.neighbor_cells[i][j] == Cell_content::WALL || info.neighbor_cells[i][j] == Cell_content::TRAP) {
-				break;
-
-			}
-
-
-			else if (info.neighbor_cells[i][j] == Cell_content::TREASURE) {
+			
+			if (info.neighbor_cells[i][j] == Cell_content::TREASURE) {
 				switch (i) {
 				case 0:
 
@@ -51,7 +107,7 @@ Command Player1::RobotControl::do_command(const Info &info)
 					case 0:
 						dir = Dir::W;
 					case 1:
-						break;
+						continue;
 					case 2:
 						dir = Dir::E;
 					default:
@@ -83,5 +139,5 @@ Command Player1::RobotControl::do_command(const Info &info)
 	Action act = Action::STEP;
 	if (rand() % 20 == 0)
 		act = Action::PLACE_TRAP;
-	return Command{act,dir};
+	return Command{ act,dir };
 }
