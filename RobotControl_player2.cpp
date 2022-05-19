@@ -15,5 +15,8 @@ Command Player2::RobotControl::do_command(const Info &info)
 	int d = rand() % 8;
 	Dir dir = static_cast<Dir>(d);
 	// dir = Dir::NE;
-	return Command{Action::STEP,dir};
+	Action act = Action::STEP;
+	if (rand() % 20 == 0)
+		act = Action::PLACE_TRAP;
+	return Command{act,dir};
 }
