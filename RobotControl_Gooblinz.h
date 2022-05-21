@@ -1,7 +1,7 @@
 #pragma once
 #include "RobotInterface.h"
 
-namespace Player1 {
+namespace Gooblinz {
 
 	class RobotControl :
 		public RobotInterface

@@ -179,7 +179,7 @@
     <ClInclude Include="MainPage.xaml.h">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="RobotControl_player1.h" />
+    <ClInclude Include="RobotControl_Gooblinz.h" />
     <ClInclude Include="RobotControl_player2.h" />
     <ClInclude Include="RobotInterface.h" />
     <ClInclude Include="RobotState.h" />
@@ -229,7 +229,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RobotControl_player1.cpp" />
+    <ClCompile Include="RobotControl_Gooblinz.cpp" />
     <ClCompile Include="RobotControl_player2.cpp" />
     <ClCompile Include="RobotState.cpp" />
     <ClCompile Include="World.cpp" />

@@ -5,9 +5,9 @@ using namespace Player2;
 
 Player2::RobotControl::RobotControl()
 {
-	robot_bitmap_row = 0;          // Pick a unique monster icon for your robot!
-	robot_bitmap_col = 4;
-	team_name = L"Team bäst";
+	robot_bitmap_row = 15;          // Pick a unique monster icon for your robot!
+	robot_bitmap_col = 15;
+	team_name = L"John Cena";
 }
 
 Command Player2::RobotControl::do_command(const Info &info)

@@ -1,25 +1,33 @@
 #include "pch.h"
 #include <debugapi.h>
-#include "RobotControl_player1.h"
+#include "RobotControl_Gooblinz.h"
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-using namespace Player1;
-Dir lastround, lastlastround;
+/*MEDLEMMAR:   Filip Karlsson Dahlgren
+               Nils Wikström
+               Marcus Bohm
+*/
 
-Player1::RobotControl::RobotControl()
+
+using namespace std;
+using namespace Gooblinz;
+Dir lastround, lastlastround;
+int rundor = 1;
+int banana = -5;
+int lastbanana = -5;
+
+Gooblinz::RobotControl::RobotControl()
 {
 	robot_bitmap_row = 1;          // Pick a unique monster icon for your robot!
 	robot_bitmap_col = 33;
-	team_name = L"Legion > cataclysm";
+	team_name = L"Gooblinz";
 }
 
-Command Player1::RobotControl::do_command(const Info& info)
+Command Gooblinz::RobotControl::do_command(const Info& info)
 {
-	lastlastround = lastround;
 
-	OutputDebugString(L"Nu körs do_command()\n");
+	OutputDebugString(L"Nu körs do_command()\n"); 
 	if (info.last_event == Event::COLLISION)
 		OutputDebugString(L"Krockade i förra rundan!\n");
 
@@ -28,8 +36,107 @@ Command Player1::RobotControl::do_command(const Info& info)
 	bool move = 1;
 	int n = 0;
 	int check = -1;
-	vector<int> walls;
+	vector<int> walls = { -50 };
+	Action act = Action::STEP;
+	rundor = rundor - 1;
 
+	walls.push_back(banana);
+
+	if (lastround == Dir::NW) 
+	{
+		if (lastbanana == 1)
+		{
+			walls.push_back(4);
+		}
+		else if (lastbanana == 3)
+		{
+			walls.push_back(6);
+		}
+	}
+	else if (lastround == Dir::N) 
+	{
+		if (lastbanana == 0)
+		{
+			walls.push_back(3);
+		}
+		else if (lastbanana == 2)
+		{
+			walls.push_back(4);
+		}
+
+	}
+	else if (lastround == Dir::NE) 
+	{
+		if (lastbanana == 1)
+		{
+			walls.push_back(3);
+		}
+		else if (lastbanana == 4)
+		{
+			walls.push_back(6);
+		}
+	}
+	else if (lastround == Dir::W) 
+	{
+		if (lastbanana == 0)
+		{
+			walls.push_back(1);
+		}
+		else if (lastbanana == 5)
+		{
+			walls.push_back(6);
+		}
+
+	}
+	else if (lastround == Dir::E) 
+	{
+		if (lastbanana == 2)
+		{
+			walls.push_back(1);
+		}
+		else if (lastbanana == 7)
+		{
+			walls.push_back(6);
+		}
+
+	}
+	else if (lastround == Dir::SW) 
+	{
+		if (lastbanana == 3)
+		{
+			walls.push_back(1);
+		}
+		else if (lastbanana == 6)
+		{
+			walls.push_back(4);
+		}
+
+	}
+	else if (lastround == Dir::S) 
+	{
+		if (lastbanana == 5)
+		{
+			walls.push_back(3);
+		}
+		else if (lastbanana == 7)
+		{
+			walls.push_back(4);
+		}
+
+	}
+	else if (lastround == Dir::SE) 
+	{
+		if (lastbanana == 6)
+		{
+			walls.push_back(3);
+		}
+		else if (lastbanana == 4)
+		{
+			walls.push_back(1);
+		}
+
+	}
+	
 
 	//stoppar roboten från att gå i samma riktning som förrförra rundan
 	if (lastlastround == Dir::NW) {
@@ -183,56 +290,6 @@ Command Player1::RobotControl::do_command(const Info& info)
 		}
 	}
 
-	/*while (move) {
-		for (int i = 0; i < walls.size(); i++) {
-			if (d == walls[i])
-		}
-	}*/
-
-
-
-
-	//while (move)
-	//{
-
-	//	for (int i = 0; i < walls.size(); i++)
-	//	{
-	//		if (walls[i] != d)
-	//			n = n + 1;
-	//	}
-	//	if (n == walls.size())
-	//	{
-	//		move = false;
-	//		switch (d)
-	//		{
-	//		case0:
-	//			dir = Dir::N;
-	//		case 1:
-	//			dir = Dir::E;
-	//		case 2:
-	//			dir = Dir::S;
-	//		case 3:
-	//			dir = Dir::W;
-	//		case 4:
-	//			dir = Dir::NE;
-	//		case 5:
-	//			dir = Dir::SE;
-	//		case 6:
-	//			dir = Dir::SW;
-	//		case 7:
-	//			dir = Dir::NW;
-	//		}
-	//	}
-	//	int d = rand() % 8;
-	//	n = 0;
-	//	/*if (it != walls.end())
-	//	{
-	//	}
-	//	else
-	//	{
-	//		move = 0;
-	//	}*/
-	//}
 
 
 
@@ -240,14 +297,37 @@ Command Player1::RobotControl::do_command(const Info& info)
 	while (move) {
 
 		/*
-		Ibland fastnar roboten i ett hörn, så för att förhindra en evig loop tvingar man roboten att röra sig
-		i en random riktning efter ett stort antal iterationer.
+		Ibland fastnar roboten i ett hörn, så för att förhindrahinen evig loop tvingar man roboten att röra sig efter ett stort antal
 		*/
 		n++;
 		if (n > 200) {
-			d = rand() % 8;
+			if (lastround == Dir::NW) {
+				dir = Dir::SE;
+			}
+			else if (lastround == Dir::N) {
+				dir = Dir::S;
+			}
+			else if (lastround == Dir::NE) {
+				dir = Dir::SW;
+			}
+			else if (lastround == Dir::W) {
+				dir = Dir::E;
+			}
+			else if (lastround == Dir::E) {
+				dir = Dir::W;
+			}
+			else if (lastround == Dir::SW) {
+				dir = Dir::NE;
+			}
+			else if (lastround == Dir::S) {
+				dir = Dir::N;
+			}
+			else if (lastround == Dir::SE) {
+				dir = Dir::NW;
+			}
+			lastround = dir;
+			lastlastround = lastround;
 			move = false;
-			break;
 		}
 
 		for (int i = 0; i < walls.size(); i++)
@@ -292,32 +372,23 @@ Command Player1::RobotControl::do_command(const Info& info)
 		}
 	}
 	
-
-	//dir = static_cast<Dir>(d);
-
-	/*while (move)
-	{
-		int d = rand() % 8;
-		Dir dir = static_cast<Dir>(d);
-		int n = 0;
-		int random_num = 1;
-		int random_num1 = 1;
-
-		for (int i = 0; i < walls.size(); i++)
-		{
-			if (walls[i] == d)
+	//Letar efter en robot, hittar den robot så ändrar den STEP till PLACE_TRAP
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if (i == 1 && j == 1)
 			{
-				n = 1;
+				continue;
+			}
+			else
+			{
+				if ((info.neighbor_cells[i][j] == Cell_content::ROBOT) && rundor <= 0)
+				{
+					act = Action::PLACE_TRAP;
+					rundor = 3;
+				}
 			}
 		}
-
-		if (n == 0)
-		{
-			move = false;
-		}
-	}*/
-
-
+	}
 
 	//Kod för att hitta skatter
 	for (int i = 0; i < 3; i++) {
@@ -330,12 +401,15 @@ Command Player1::RobotControl::do_command(const Info& info)
 					switch (j) {
 					case 0:
 						dir = Dir::NW;
+						act = Action::STEP;
 						break;
 					case 1:
 						dir = Dir::N;
+						act = Action::STEP;
 						break;
 					case 2:
 						dir = Dir::NE;
+						act = Action::STEP;
 						break;
 					default:
 						break;
@@ -348,11 +422,13 @@ Command Player1::RobotControl::do_command(const Info& info)
 					switch (j) {
 					case 0:
 						dir = Dir::W;
+						act = Action::STEP;
 						break;;
 					case 1:
 						break;;
 					case 2:
 						dir = Dir::E;
+						act = Action::STEP;
 						break;
 					default:
 						break;
@@ -364,81 +440,84 @@ Command Player1::RobotControl::do_command(const Info& info)
 					switch (j) {
 					case 0:
 						dir = Dir::SW;
+						act = Action::STEP;
 						break;
 					case 1:
 						dir = Dir::S;
+						act = Action::STEP;
 						break;
 					case 2:
 						dir = Dir::SE;
+						act = Action::STEP;
 						break;
 					default:
 						break;
 					}
 				}
-
-				/*switch (i)
-				{
-
-				case 0:
-
-					switch (j) {
-					case 0:
-						dir = Dir::NW;
-						break;
-					case 1:
-						dir = Dir::N;
-						break;
-					case 2:
-						dir = Dir::NE;
-						break;
-					default:
-						break;
-					}
-
-				case 1:
-					switch (j) {
-					case 0:
-						dir = Dir::W;
-						break;;
-					case 1:
-						break;;
-					case 2:
-						dir = Dir::E;
-						break;
-					default:
-						break;
-					}
-
-				case 2:
-
-					switch (j) {
-					case 0:
-						dir = Dir::SW;
-						break;
-					case 1:
-						dir = Dir::S;
-						break;
-					case 2:
-						dir = Dir::SE;
-						break;
-					default:
-						break;
-					}
-
-				default:
-					break;
-				}*/
 			}
 		}
 	}
 
-	//int d = rand() % 8;
-	//dir dir = static_cast<Dir>(d);
-	Action act = Action::STEP;
-	/*if (rand() % 20 == 0)
-		act = Action::PLACE_TRAP;*/
-	
+
+
+	//Lagrar förra rundans banankoordinater
+	lastbanana = banana;
+
+	//sparar plats för placerad banan
+	if (act == Action::PLACE_TRAP)
+	{
+		if (dir == Dir::NW)
+		{
+			banana = 0;
+			OutputDebugString(L"hejhej");
+		}
+		else if (dir == Dir::N)
+		{
+			banana = 1;
+			OutputDebugString(L"hejhej banna");
+		}
+		else if (dir == Dir::NE)
+		{
+			banana = 2;
+			OutputDebugString(L"hejhej banan");
+		}
+		else if (dir == Dir::W)
+		{
+			banana = 3;
+			OutputDebugString(L"hejhej banana");
+		}
+		else if (dir == Dir::E)
+		{
+			banana = 4;
+			OutputDebugString(L"hejhej banannana");
+		}
+		else if (dir == Dir::SW)
+		{
+			banana = 5;
+			OutputDebugString(L"hejhej bananananananana");
+		}
+		else if (dir == Dir::S)
+		{
+			banana = 6;
+			OutputDebugString(L"hejhej banananananananananananan");
+		}
+		else if (dir == Dir::SE)
+		{
+			banana = 7;
+			OutputDebugString(L"hejhej banananananananananananananananannanana");
+		}
+	}
+	else
+	{
+		banana = -5;
+	}
+
+
+	//lagrar förrförra rundans koordinater
 	lastlastround = lastround;
+
+	//lagrar förra rundans koordinater;
 	lastround = dir;
+
 	return Command{ act,dir };
 }

@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "Game.h"
-#include "RobotControl_player1.h"
+#include "RobotControl_Gooblinz.h"
 #include "RobotControl_player2.h"
 
 // Namespaces for player codes
-#define PLAYER1 Player1
+#define PLAYER1 Gooblinz
 #define PLAYER2 Player2
 
 Game::Game() :
